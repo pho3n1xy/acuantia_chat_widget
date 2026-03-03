@@ -134,7 +134,25 @@
   body:not(:has([role="dialog"])) .aui-thread-welcome-root {
     display: none !important;
   }
+
+  /* Hide the scrollbar inside the chat thread viewport but allow scrolling */
+  .aui-thread-viewport,
+  .aui-md-table,
+  .aui-composer-attachments {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+  }
+
+  .aui-thread-viewport::-webkit-scrollbar,
+  .aui-md-table::-webkit-scrollbar,
+  .aui-composer-attachments::-webkit-scrollbar {
+    display: none;
+    /* WebKit */
+  }
 }
+
 
 
 /* --- THE MAGENTO FORCEFIELD --- */

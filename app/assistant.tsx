@@ -24,11 +24,15 @@ const tankbotAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
     // Extract the last user message text
     const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
-    const messageText =
-      lastUserMsg?.content
-        ?.filter((part): part is { type: "text"; text: string } => part.type === "text")
-        .map((part) => part.text)
-        .join("\n") ?? "";
+    let messageText = "";
+    if (typeof lastUserMsg?.content === "string") {
+      messageText = lastUserMsg.content;
+    } else if (Array.isArray(lastUserMsg?.content)) {
+      messageText = lastUserMsg.content
+        .filter((part: any) => part.type === "text")
+        .map((part: any) => part.text)
+        .join("\n");
+    }
 
     const response = await fetch("/api/chat", {
       method: "POST",
