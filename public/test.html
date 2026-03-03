@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magento Local Test Environment</title>
+    <style>
+        body {
+            /* Simulate a store background */
+            background-color: #f4f4f4;
+            height: 2000px;
+            margin: 0;
+            font-family: sans-serif;
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Local Magento Test Environment</h1>
+    <p>This page acts like Magento. Scroll around and try dragging the chat widget!</p>
+
+    <!-- TankBot Chat Widget Test Header Script -->
+    <div id="tankbot-iframe-container"
+        style="position: fixed; bottom: 0px; right: 0px; width: 440px; height: 750px; z-index: 999999; clip-path: circle(40px at calc(100% - 48px) calc(100% - 48px)); transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;">
+        <iframe src="http://localhost:3000" style="width: 100%; height: 100%; border: none; background: transparent;"
+            scrolling="no" allowtransparency="true" allow="clipboard-write">
+        </iframe>
+    </div>
+
+    <script>
+        (function () {
+            var container = document.getElementById('tankbot-iframe-container');
+            var iframe = container.querySelector('iframe');
+
+            let currentBottom = 0;
+            let currentRight = 0;
+
+            window.addEventListener('message', function (e) {
+                // Changed to accept localhost for local testing
+                if (e.origin !== 'http://localhost:3000') return;
+
+                if (e.data && e.data.type === 'TANKBOT_RESIZE') {
+                    if (e.data.isOpen) {
+                        container.style.clipPath = 'circle(150% at calc(100% - 48px) calc(100% - 48px))';
+                    } else {
+                        container.style.clipPath = 'circle(40px at calc(100% - 48px) calc(100% - 48px))';
+                    }
+                }
+
+                if (e.data && e.data.type === 'TANKBOT_DRAG_START') {
+                    container.style.transition = 'none';
+                    iframe.style.pointerEvents = 'none';
+                    document.body.style.userSelect = 'none';
+                }
+
+                if (e.data && e.data.type === 'TANKBOT_DRAG') {
+                    currentBottom -= e.data.deltaY;
+                    currentRight -= e.data.deltaX;
+
+                    container.style.bottom = currentBottom + 'px';
+                    container.style.right = currentRight + 'px';
+                }
+
+                if (e.data && e.data.type === 'TANKBOT_DRAG_END') {
+                    container.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                    iframe.style.pointerEvents = 'auto';
+                    document.body.style.userSelect = 'auto';
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

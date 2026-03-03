@@ -8,13 +8,14 @@ import { AssistantModal } from "@/components/assistant-ui/assistant-modal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, useRef } from "react";
 
-// Generate a unique thread ID per browser session, persisted in sessionStorage
+// Generate a unique thread ID per browser session, persisted in localStorage
+// Using localStorage (not sessionStorage) so the conversation survives Magento page navigations
 function getThreadId(): string {
   const key = "tankbot-thread-id";
-  let id = sessionStorage.getItem(key);
+  let id = localStorage.getItem(key);
   if (!id) {
     id = `widget-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    sessionStorage.setItem(key, id);
+    localStorage.setItem(key, id);
   }
   return id;
 }
